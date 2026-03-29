@@ -1,0 +1,6 @@
+const DAILY_SESSION_STATUS = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+};
+
+module.exports = DAILY_SESSION_STATUS;

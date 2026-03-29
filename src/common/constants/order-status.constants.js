@@ -1,0 +1,7 @@
+const ORDER_STATUS = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED',
+};
+
+module.exports = ORDER_STATUS;

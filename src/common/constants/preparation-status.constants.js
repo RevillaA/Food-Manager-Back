@@ -1,0 +1,6 @@
+const PREPARATION_STATUS = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  SERVED: 'SERVED',
+};
+
+module.exports = PREPARATION_STATUS;
