@@ -25,6 +25,12 @@ router.get(
 );
 
 router.get(
+  '/board',
+  ordersValidator.validateOrdersBoardFilters,
+  ordersController.getOrdersBoard
+);
+
+router.get(
   '/open',
   ordersController.getOpenOrders
 );

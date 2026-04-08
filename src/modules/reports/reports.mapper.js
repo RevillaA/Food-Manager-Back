@@ -13,6 +13,7 @@ const toDailySalesReportResponse = ({
       MAIN_DISH: Number(totals_by_category.MAIN_DISH || 0),
       DRINK: Number(totals_by_category.DRINK || 0),
       EXTRA: Number(totals_by_category.EXTRA || 0),
+      SWEET: Number(totals_by_category.SWEET || 0),
     },
     sales: sales.map((sale) => ({
       id: sale.id,

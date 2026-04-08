@@ -117,6 +117,44 @@ const getOrders = async (queryParams) => {
   }
 };
 
+const getOrdersBoard = async (queryParams) => {
+  const client = await pool.connect();
+
+  try {
+    const { page, limit, offset } = getPagination(queryParams);
+
+    let daily_session_id = queryParams.daily_session_id || undefined;
+
+    if (!daily_session_id) {
+      const activeSession = await dailySessionsRepository.findActiveDailySession(client);
+      daily_session_id = activeSession ? activeSession.id : undefined;
+    }
+
+    const filters = {
+      status: queryParams.status || undefined,
+      preparation_status: queryParams.preparation_status || undefined,
+      payment_state: queryParams.payment_state || undefined,
+      daily_session_id,
+    };
+
+    const [orders, total] = await Promise.all([
+      ordersRepository.listOrdersBoard(client, { limit, offset, ...filters }),
+      ordersRepository.countOrdersBoard(client, filters),
+    ]);
+
+    return {
+      data: orders,
+      meta: {
+        page,
+        limit,
+        total,
+      },
+    };
+  } finally {
+    client.release();
+  }
+};
+
 const getOpenOrders = async () => {
   const client = await pool.connect();
 
@@ -355,6 +393,7 @@ const closeOrder = async (orderId, payload) => {
 module.exports = {
   createOrder,
   getOrders,
+  getOrdersBoard,
   getOpenOrders,
   getOrderById,
   addOrderItem,

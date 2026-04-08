@@ -31,7 +31,8 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TYPE public.category_type_enum AS ENUM (
     'MAIN_DISH',
     'DRINK',
-    'EXTRA'
+    'EXTRA',
+    'SWEET'
 );
 
 --
@@ -387,7 +388,7 @@ CREATE TABLE public.users (
 INSERT INTO public.categories VALUES ('f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Platos', 'MAIN_DISH', 'Platos principales del restaurante', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
 INSERT INTO public.categories VALUES ('a5ab0006-fe0e-4f27-9d41-eb9c7ef2fa6c', 'Bebidas', 'DRINK', 'Bebidas frías o calientes', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
 INSERT INTO public.categories VALUES ('3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Extras', 'EXTRA', 'Complementos o agregados adicionales', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
-INSERT INTO public.categories VALUES ('aded9029-08d6-427a-87c9-310a9a1b2783', 'Postres', 'MAIN_DISH', 'Postres y dulces del local', false, '2026-03-25 21:45:09.085348+00', '2026-03-25 21:49:36.466856+00');
+INSERT INTO public.categories VALUES ('aded9029-08d6-427a-87c9-310a9a1b2783', 'Postres', 'SWEET', 'Postres y dulces del local', false, '2026-03-25 21:45:09.085348+00', '2026-03-25 21:49:36.466856+00');
 
 
 --

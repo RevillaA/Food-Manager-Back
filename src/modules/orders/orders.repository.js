@@ -65,6 +65,63 @@ const listOrders = async (client, { limit, offset, status, preparation_status, d
   return result.rows;
 };
 
+const PAYMENT_STATE_SQL = `
+  CASE
+    WHEN s.id IS NULL THEN 'UNPAID'
+    WHEN s.payment_status = 'PAID' THEN 'PAID'
+    WHEN s.payment_status = 'PENDING' THEN 'PENDING'
+    ELSE 'UNPAID'
+  END
+`;
+
+const listOrdersBoard = async (
+  client,
+  { limit, offset, status, preparation_status, daily_session_id, payment_state }
+) => {
+  const conditions = [];
+  const values = [];
+  let paramIndex = 1;
+
+  if (status) {
+    conditions.push(`o.status = $${paramIndex++}`);
+    values.push(status);
+  }
+
+  if (preparation_status) {
+    conditions.push(`o.preparation_status = $${paramIndex++}`);
+    values.push(preparation_status);
+  }
+
+  if (daily_session_id) {
+    conditions.push(`o.daily_session_id = $${paramIndex++}`);
+    values.push(daily_session_id);
+  }
+
+  if (payment_state) {
+    conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
+    values.push(payment_state);
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const sql = `
+    SELECT
+      ${ORDER_SELECT_FIELDS},
+      ${PAYMENT_STATE_SQL} AS payment_state
+    FROM orders o
+    INNER JOIN users u ON u.id = o.created_by_user_id
+    LEFT JOIN sales s ON s.order_id = o.id
+    ${whereClause}
+    ORDER BY o.order_number ASC, o.created_at ASC
+    LIMIT $${paramIndex++} OFFSET $${paramIndex++}
+  `;
+
+  values.push(limit, offset);
+
+  const result = await client.query(sql, values);
+  return result.rows;
+};
+
 const countOrders = async (client, { status, preparation_status, daily_session_id }) => {
   const conditions = [];
   const values = [];
@@ -90,6 +147,47 @@ const countOrders = async (client, { status, preparation_status, daily_session_i
   const sql = `
     SELECT COUNT(*)::int AS total
     FROM orders
+    ${whereClause}
+  `;
+
+  const result = await client.query(sql, values);
+  return result.rows[0].total;
+};
+
+const countOrdersBoard = async (
+  client,
+  { status, preparation_status, daily_session_id, payment_state }
+) => {
+  const conditions = [];
+  const values = [];
+  let paramIndex = 1;
+
+  if (status) {
+    conditions.push(`o.status = $${paramIndex++}`);
+    values.push(status);
+  }
+
+  if (preparation_status) {
+    conditions.push(`o.preparation_status = $${paramIndex++}`);
+    values.push(preparation_status);
+  }
+
+  if (daily_session_id) {
+    conditions.push(`o.daily_session_id = $${paramIndex++}`);
+    values.push(daily_session_id);
+  }
+
+  if (payment_state) {
+    conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
+    values.push(payment_state);
+  }
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+
+  const sql = `
+    SELECT COUNT(*)::int AS total
+    FROM orders o
+    LEFT JOIN sales s ON s.order_id = o.id
     ${whereClause}
   `;
 
@@ -175,7 +273,9 @@ const closeOrder = async (client, { id, notes }) => {
 module.exports = {
   findOrderById,
   listOrders,
+  listOrdersBoard,
   countOrders,
+  countOrdersBoard,
   getNextOrderNumber,
   createOrder,
   updateOrderPreparationStatus,

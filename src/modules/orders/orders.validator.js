@@ -2,6 +2,7 @@ const validateMiddleware = require('../../middlewares/validate.middleware');
 const {
   createOrderSchema,
   ordersFilterSchema,
+  ordersBoardFilterSchema,
   addOrderItemSchema,
   updateOrderItemSchema,
   updateOrderItemPreparationStatusSchema,
@@ -13,6 +14,7 @@ const {
 
 const validateCreateOrder = validateMiddleware(createOrderSchema, 'body');
 const validateOrdersFilters = validateMiddleware(ordersFilterSchema, 'query');
+const validateOrdersBoardFilters = validateMiddleware(ordersBoardFilterSchema, 'query');
 const validateAddOrderItem = validateMiddleware(addOrderItemSchema, 'body');
 const validateUpdateOrderItem = validateMiddleware(updateOrderItemSchema, 'body');
 const validateUpdateOrderItemPreparationStatus = validateMiddleware(updateOrderItemPreparationStatusSchema,'body');
@@ -23,6 +25,7 @@ const validateOrderItemIdParam = validateMiddleware(orderItemIdParamSchema, 'par
 module.exports = {
   validateCreateOrder,
   validateOrdersFilters,
+  validateOrdersBoardFilters,
   validateAddOrderItem,
   validateUpdateOrderItem,
   validateUpdateOrderItemPreparationStatus,

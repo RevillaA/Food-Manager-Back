@@ -36,6 +36,23 @@ const getOrders = async (req, res, next) => {
   }
 };
 
+const getOrdersBoard = async (req, res, next) => {
+  try {
+    const result = await ordersService.getOrdersBoard(req.query);
+
+    return PaginationResponse.send({
+      res,
+      message: 'Orders board retrieved successfully',
+      data: ordersMapper.toOrdersListResponse(result.data),
+      page: result.meta.page,
+      limit: result.meta.limit,
+      total: result.meta.total,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getOpenOrders = async (req, res, next) => {
   try {
     const orders = await ordersService.getOpenOrders();
@@ -169,6 +186,7 @@ const closeOrder = async (req, res, next) => {
 module.exports = {
   createOrder,
   getOrders,
+  getOrdersBoard,
   getOpenOrders,
   getOrderById,
   addOrderItem,

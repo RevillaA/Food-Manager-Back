@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { idParamSchema, paginationSchema } = require('../../common/validators/common.schemas');
 
-const CATEGORY_TYPES = ['MAIN_DISH', 'DRINK', 'EXTRA'];
+const CATEGORY_TYPES = ['MAIN_DISH', 'DRINK', 'EXTRA', 'SWEET'];
 
 const createCategorySchema = Joi.object({
   name: Joi.string().trim().min(2).max(80).required(),

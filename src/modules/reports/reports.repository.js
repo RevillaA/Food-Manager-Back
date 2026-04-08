@@ -49,6 +49,8 @@ const getDailyCategoryTotals = async (client, date) => {
         WHEN LOWER(si.product_category_name) = 'platos' THEN 'MAIN_DISH'
         WHEN LOWER(si.product_category_name) = 'bebidas' THEN 'DRINK'
         WHEN LOWER(si.product_category_name) = 'extras' THEN 'EXTRA'
+        WHEN LOWER(si.product_category_name) = 'sweet' THEN 'SWEET'
+        WHEN LOWER(si.product_category_name) = 'postres' THEN 'SWEET'
         ELSE si.product_category_name
       END AS category_key,
       COALESCE(SUM(si.line_total), 0)::numeric(10,2) AS total_amount

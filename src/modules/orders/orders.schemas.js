@@ -3,6 +3,7 @@ const { idParamSchema, paginationSchema } = require('../../common/validators/com
 
 const ORDER_STATUS = ['OPEN', 'CLOSED', 'CANCELLED'];
 const PREPARATION_STATUS = ['IN_PROGRESS', 'SERVED'];
+const PAYMENT_STATE = ['UNPAID', 'PENDING', 'PAID'];
 
 const createOrderSchema = Joi.object({
   notes: Joi.string().trim().max(250).allow(null, ''),
@@ -11,6 +12,13 @@ const createOrderSchema = Joi.object({
 const ordersFilterSchema = paginationSchema.keys({
   status: Joi.string().valid(...ORDER_STATUS).optional(),
   preparation_status: Joi.string().valid(...PREPARATION_STATUS).optional(),
+  daily_session_id: Joi.string().uuid().optional(),
+});
+
+const ordersBoardFilterSchema = paginationSchema.keys({
+  status: Joi.string().valid(...ORDER_STATUS).optional(),
+  preparation_status: Joi.string().valid(...PREPARATION_STATUS).optional(),
+  payment_state: Joi.string().valid(...PAYMENT_STATE).optional(),
   daily_session_id: Joi.string().uuid().optional(),
 });
 
@@ -45,6 +53,7 @@ const closeOrderSchema = Joi.object({
 module.exports = {
   createOrderSchema,
   ordersFilterSchema,
+  ordersBoardFilterSchema,
   addOrderItemSchema,
   updateOrderItemSchema,
   updateOrderItemPreparationStatusSchema,

@@ -39,6 +39,7 @@ const getDailySalesReport = async (queryParams) => {
       MAIN_DISH: 0,
       DRINK: 0,
       EXTRA: 0,
+      SWEET: 0,
     };
 
     categoryTotals.forEach((row) => {

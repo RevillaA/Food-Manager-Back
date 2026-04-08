@@ -36,6 +36,7 @@ const toOrderResponse = (order) => {
     cancelled_at: order.cancelled_at,
     created_at: order.created_at,
     updated_at: order.updated_at,
+    ...(order.payment_state ? { payment_state: order.payment_state } : {}),
     created_by_user: {
       id: order.created_by_user_id,
       full_name: order.created_by_full_name,
