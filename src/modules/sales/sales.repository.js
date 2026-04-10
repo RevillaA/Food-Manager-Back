@@ -4,6 +4,7 @@ const SALES_SELECT_FIELDS = `
   s.order_id,
   s.created_by_user_id,
   s.sale_number,
+  s.sale_identifier,
   s.payment_status,
   s.payment_method,
   s.subtotal,
@@ -60,6 +61,7 @@ const createSale = async (
     order_id,
     created_by_user_id,
     sale_number,
+    sale_identifier,
     payment_status,
     payment_method,
     subtotal,
@@ -74,6 +76,7 @@ const createSale = async (
       order_id,
       created_by_user_id,
       sale_number,
+      sale_identifier,
       payment_status,
       payment_method,
       subtotal,
@@ -81,7 +84,7 @@ const createSale = async (
       paid_at,
       notes
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
     RETURNING id
   `;
 
@@ -90,6 +93,7 @@ const createSale = async (
     order_id,
     created_by_user_id,
     sale_number,
+    sale_identifier,
     payment_status,
     payment_method,
     subtotal,
@@ -99,6 +103,20 @@ const createSale = async (
   ]);
 
   return result.rows[0];
+};
+
+const updateSalePaymentStatus = async (client, { id, payment_status, paid_at }) => {
+  const sql = `
+    UPDATE sales
+    SET
+      payment_status = $2,
+      paid_at = $3
+    WHERE id = $1
+    RETURNING id
+  `;
+
+  const result = await client.query(sql, [id, payment_status, paid_at]);
+  return result.rows[0] || null;
 };
 
 const listSales = async (
@@ -125,12 +143,12 @@ const listSales = async (
   }
 
   if (date_from) {
-    conditions.push(`s.created_at::date >= $${paramIndex++}`);
+    conditions.push(`ds.session_date >= $${paramIndex++}`);
     values.push(date_from);
   }
 
   if (date_to) {
-    conditions.push(`s.created_at::date <= $${paramIndex++}`);
+    conditions.push(`ds.session_date <= $${paramIndex++}`);
     values.push(date_to);
   }
 
@@ -140,8 +158,9 @@ const listSales = async (
     SELECT ${SALES_SELECT_FIELDS}
     FROM sales s
     INNER JOIN users u ON u.id = s.created_by_user_id
+    INNER JOIN daily_sessions ds ON ds.id = s.daily_session_id
     ${whereClause}
-    ORDER BY s.created_at DESC
+    ORDER BY ds.session_date DESC, s.sale_number ASC
     LIMIT $${paramIndex++} OFFSET $${paramIndex++}
   `;
 
@@ -175,12 +194,12 @@ const countSales = async (
   }
 
   if (date_from) {
-    conditions.push(`created_at::date >= $${paramIndex++}`);
+    conditions.push(`ds.session_date >= $${paramIndex++}`);
     values.push(date_from);
   }
 
   if (date_to) {
-    conditions.push(`created_at::date <= $${paramIndex++}`);
+    conditions.push(`ds.session_date <= $${paramIndex++}`);
     values.push(date_to);
   }
 
@@ -188,7 +207,8 @@ const countSales = async (
 
   const sql = `
     SELECT COUNT(*)::int AS total
-    FROM sales
+    FROM sales s
+    INNER JOIN daily_sessions ds ON ds.id = s.daily_session_id
     ${whereClause}
   `;
 
@@ -209,12 +229,100 @@ const listSalesOfDay = async (client, session_date) => {
   return result.rows;
 };
 
+const listSalesBySessionDateRange = async (
+  client,
+  { limit, offset, session_date_from, session_date_to, daily_session_id, payment_status, payment_method }
+) => {
+  const conditions = [];
+  const values = [];
+  let paramIndex = 1;
+
+  conditions.push(`ds.session_date >= $${paramIndex++}`);
+  values.push(session_date_from);
+
+  conditions.push(`ds.session_date <= $${paramIndex++}`);
+  values.push(session_date_to);
+
+  if (daily_session_id) {
+    conditions.push(`s.daily_session_id = $${paramIndex++}`);
+    values.push(daily_session_id);
+  }
+
+  if (payment_status) {
+    conditions.push(`s.payment_status = $${paramIndex++}`);
+    values.push(payment_status);
+  }
+
+  if (payment_method) {
+    conditions.push(`s.payment_method = $${paramIndex++}`);
+    values.push(payment_method);
+  }
+
+  const sql = `
+    SELECT ${SALES_SELECT_FIELDS}
+    FROM sales s
+    INNER JOIN users u ON u.id = s.created_by_user_id
+    INNER JOIN daily_sessions ds ON ds.id = s.daily_session_id
+    WHERE ${conditions.join(' AND ')}
+    ORDER BY ds.session_date DESC, s.sale_number ASC
+    LIMIT $${paramIndex++} OFFSET $${paramIndex++}
+  `;
+
+  values.push(limit, offset);
+
+  const result = await client.query(sql, values);
+  return result.rows;
+};
+
+const countSalesBySessionDateRange = async (
+  client,
+  { session_date_from, session_date_to, daily_session_id, payment_status, payment_method }
+) => {
+  const conditions = [];
+  const values = [];
+  let paramIndex = 1;
+
+  conditions.push(`ds.session_date >= $${paramIndex++}`);
+  values.push(session_date_from);
+
+  conditions.push(`ds.session_date <= $${paramIndex++}`);
+  values.push(session_date_to);
+
+  if (daily_session_id) {
+    conditions.push(`s.daily_session_id = $${paramIndex++}`);
+    values.push(daily_session_id);
+  }
+
+  if (payment_status) {
+    conditions.push(`s.payment_status = $${paramIndex++}`);
+    values.push(payment_status);
+  }
+
+  if (payment_method) {
+    conditions.push(`s.payment_method = $${paramIndex++}`);
+    values.push(payment_method);
+  }
+
+  const sql = `
+    SELECT COUNT(*)::int AS total
+    FROM sales s
+    INNER JOIN daily_sessions ds ON ds.id = s.daily_session_id
+    WHERE ${conditions.join(' AND ')}
+  `;
+
+  const result = await client.query(sql, values);
+  return result.rows[0].total;
+};
+
 module.exports = {
   findSaleById,
   findSaleByOrderId,
   getNextSaleNumber,
   createSale,
+  updateSalePaymentStatus,
   listSales,
   countSales,
   listSalesOfDay,
+  listSalesBySessionDateRange,
+  countSalesBySessionDateRange,
 };

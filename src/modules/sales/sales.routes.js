@@ -18,6 +18,13 @@ router.post(
   salesController.createSale
 );
 
+router.patch(
+  '/:id/payment-status',
+  salesValidator.validateSaleIdParam,
+  salesValidator.validateUpdateSalePaymentStatus,
+  salesController.updateSalePaymentStatus
+);
+
 router.get(
   '/',
   salesValidator.validateSalesFilters,
@@ -26,7 +33,14 @@ router.get(
 
 router.get(
   '/day',
+  salesValidator.validateSalesDayFilters,
   salesController.getSalesOfToday
+);
+
+router.get(
+  '/range',
+  salesValidator.validateSalesRangeFilters,
+  salesController.getSalesByRange
 );
 
 router.get(

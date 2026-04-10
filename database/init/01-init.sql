@@ -346,6 +346,7 @@ CREATE TABLE public.sales (
     order_id uuid NOT NULL,
     created_by_user_id uuid NOT NULL,
     sale_number integer NOT NULL,
+    sale_identifier character varying(20) NOT NULL,
     payment_status public.payment_status_enum DEFAULT 'PAID'::public.payment_status_enum NOT NULL,
     payment_method public.payment_method_enum NOT NULL,
     subtotal numeric(10,2) NOT NULL,
@@ -357,7 +358,8 @@ CREATE TABLE public.sales (
     CONSTRAINT chk_sales_paid_at_when_paid CHECK (((payment_status <> 'PAID'::public.payment_status_enum) OR (paid_at IS NOT NULL))),
     CONSTRAINT chk_sales_subtotal_positive CHECK ((subtotal > (0)::numeric)),
     CONSTRAINT chk_sales_total_gte_subtotal CHECK ((total >= subtotal)),
-    CONSTRAINT chk_sales_total_positive CHECK ((total > (0)::numeric))
+    CONSTRAINT chk_sales_total_positive CHECK ((total > (0)::numeric)),
+    CONSTRAINT uq_sales_identifier_per_session UNIQUE (daily_session_id, sale_identifier)
 );
 
 
@@ -466,8 +468,8 @@ INSERT INTO public.sale_items VALUES ('88bfde94-7c83-4fb6-a8f6-99e7fda70f83', 'a
 -- Data for Name: sales; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.sales VALUES ('f965291e-be3c-4522-ac48-212d3326ba48', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '6fa141a7-c26a-4d4d-abeb-19268aae659d', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 1, 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:22:05.119+00', 'cobro en caja', '2026-03-28 17:22:05.112247+00', '2026-03-28 17:22:05.112247+00');
-INSERT INTO public.sales VALUES ('acc5780e-5f20-4b75-a393-374604e1512f', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '9123e70c-06d6-47bc-ae57-92c8c3d42168', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 2, 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:27:46.749+00', 'Pago efectivo', '2026-03-28 17:27:46.745862+00', '2026-03-28 17:27:46.745862+00');
+INSERT INTO public.sales VALUES ('f965291e-be3c-4522-ac48-212d3326ba48', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '6fa141a7-c26a-4d4d-abeb-19268aae659d', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 1, '20260328_0001_I', 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:22:05.119+00', 'cobro en caja', '2026-03-28 17:22:05.112247+00', '2026-03-28 17:22:05.112247+00');
+INSERT INTO public.sales VALUES ('acc5780e-5f20-4b75-a393-374604e1512f', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '9123e70c-06d6-47bc-ae57-92c8c3d42168', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 2, '20260328_0002_I', 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:27:46.749+00', 'Pago efectivo', '2026-03-28 17:27:46.745862+00', '2026-03-28 17:27:46.745862+00');
 
 
 --

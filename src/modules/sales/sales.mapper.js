@@ -27,6 +27,7 @@ const toSaleResponse = (sale) => {
     order_id: sale.order_id,
     created_by_user_id: sale.created_by_user_id,
     sale_number: sale.sale_number,
+    sale_identifier: sale.sale_identifier,
     payment_status: sale.payment_status,
     payment_method: sale.payment_method,
     subtotal: Number(sale.subtotal),
@@ -35,6 +36,7 @@ const toSaleResponse = (sale) => {
     notes: sale.notes,
     created_at: sale.created_at,
     updated_at: sale.updated_at,
+    ...(Array.isArray(sale.items) ? { items: sale.items.map(toSaleItemResponse) } : {}),
     created_by_user: {
       id: sale.created_by_user_id,
       full_name: sale.created_by_full_name,

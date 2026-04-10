@@ -19,6 +19,20 @@ const createSale = async (req, res, next) => {
   }
 };
 
+const updateSalePaymentStatus = async (req, res, next) => {
+  try {
+    const result = await salesService.updateSalePaymentStatus(req.params.id, req.body);
+
+    return ApiResponse.success({
+      res,
+      message: 'Sale payment status updated successfully',
+      data: salesMapper.toSaleDetailResponse(result.sale, result.items),
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 const getSales = async (req, res, next) => {
   try {
     const result = await salesService.getSales(req.query);
@@ -52,12 +66,36 @@ const getSaleById = async (req, res, next) => {
 
 const getSalesOfToday = async (req, res, next) => {
   try {
-    const sales = await salesService.getSalesOfToday();
+    res.set('Cache-Control', 'no-store');
 
-    return ApiResponse.success({
+    const result = await salesService.getSalesByDay(req.query);
+
+    return PaginationResponse.send({
       res,
-      message: 'Today sales retrieved successfully',
-      data: salesMapper.toSalesListResponse(sales),
+      message: 'Day sales retrieved successfully',
+      data: salesMapper.toSalesListResponse(result.data),
+      page: result.meta.page,
+      limit: result.meta.limit,
+      total: result.meta.total,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const getSalesByRange = async (req, res, next) => {
+  try {
+    res.set('Cache-Control', 'no-store');
+
+    const result = await salesService.getSalesByRange(req.query);
+
+    return PaginationResponse.send({
+      res,
+      message: 'Range sales retrieved successfully',
+      data: salesMapper.toSalesListResponse(result.data),
+      page: result.meta.page,
+      limit: result.meta.limit,
+      total: result.meta.total,
     });
   } catch (error) {
     return next(error);
@@ -66,7 +104,9 @@ const getSalesOfToday = async (req, res, next) => {
 
 module.exports = {
   createSale,
+  updateSalePaymentStatus,
   getSales,
   getSaleById,
   getSalesOfToday,
+  getSalesByRange,
 };

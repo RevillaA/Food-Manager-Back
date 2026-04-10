@@ -23,6 +23,22 @@ const listSaleItemsBySaleId = async (client, sale_id) => {
   return result.rows;
 };
 
+const listSaleItemsBySaleIds = async (client, saleIds = []) => {
+  if (!saleIds.length) {
+    return [];
+  }
+
+  const sql = `
+    SELECT ${SALE_ITEM_SELECT_FIELDS}
+    FROM sale_items si
+    WHERE si.sale_id = ANY($1::uuid[])
+    ORDER BY si.sale_id ASC, si.created_at ASC
+  `;
+
+  const result = await client.query(sql, [saleIds]);
+  return result.rows;
+};
+
 const createSaleItem = async (
   client,
   {
@@ -64,5 +80,6 @@ const createSaleItem = async (
 
 module.exports = {
   listSaleItemsBySaleId,
+  listSaleItemsBySaleIds,
   createSaleItem,
 };
