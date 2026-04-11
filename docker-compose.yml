@@ -9,9 +9,30 @@ services:
       POSTGRES_DB: restaurant_db
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d restaurant_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
-    - postgres_data:/var/lib/postgresql/data
-    - ./database/init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+
+  db-migrations:
+    image: postgres:16
+    container_name: restaurant_db_migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: restaurant_db
+    volumes:
+      - ./database/migrations:/migrations:ro
+      - ./database/scripts/run-migrations.sh:/run-migrations.sh:ro
+    entrypoint: ["sh", "/run-migrations.sh"]
+    restart: "no"
     
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -24,6 +45,7 @@ services:
       - "8080:80"
     depends_on:
       - postgres
+      - db-migrations
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
