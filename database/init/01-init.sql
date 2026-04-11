@@ -482,6 +482,53 @@ INSERT INTO public.users VALUES ('ed74c33a-5cf3-495a-b6ca-40c18a77f235', 'ee075d
 INSERT INTO public.users VALUES ('8e444364-97a3-4e1e-bcbb-3e51236bd263', 'e2f66554-1732-4bc4-bf04-52b9739b692f', 'Cajero Editado', 'cajero', 'cajero_editado@esquinarevis.com', '$2b$10$RWQkFkm3dPimYN2uQBgHhuyawZK3KnEYr6ocuz/MnsK5t3nlXy9Ga', true, '2026-03-25 17:53:50.943922+00', '2026-03-25 21:47:51.502428+00');
 
 
+-- =====================================================
+-- Compatibility block previously handled by migrations
+-- Safe to run in INIT because all statements are idempotent
+-- =====================================================
+
+-- Primera Linea ejecucion
+ALTER TYPE public.category_type_enum ADD VALUE IF NOT EXISTS 'SWEET';
+
+-- Segunda Linea ejecucion
+UPDATE public.categories
+SET category_type = 'SWEET'
+WHERE LOWER(name) IN ('postres', 'sweet')
+    AND category_type <> 'SWEET';
+
+-- Migration: Add sale_identifier column to sales table
+-- Purpose: Store human-readable sale identifier with format: YYYYMMDD_ORDERNUMBER_USERINITIAL
+
+ALTER TABLE public.sales
+ADD COLUMN IF NOT EXISTS sale_identifier VARCHAR(20);
+
+ALTER TABLE public.sales
+ALTER COLUMN sale_identifier SET DEFAULT '';
+
+-- Create unique constraint on sale_identifier per daily_session
+DO $$
+BEGIN
+    IF NOT EXISTS (
+            SELECT 1
+            FROM pg_constraint
+            WHERE conname = 'uq_sales_identifier_per_session'
+                AND conrelid = 'public.sales'::regclass
+    ) THEN
+            ALTER TABLE public.sales
+            ADD CONSTRAINT uq_sales_identifier_per_session UNIQUE (daily_session_id, sale_identifier);
+    END IF;
+END;
+$$;
+
+-- Update existing records with a placeholder identifier (optional, can be left empty)
+UPDATE public.sales
+SET sale_identifier = TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || '_' || LPAD(sale_number::text, 3, '0') || '_MIGR'
+WHERE sale_identifier IS NULL OR sale_identifier = '';
+
+ALTER TABLE public.sales
+ALTER COLUMN sale_identifier SET NOT NULL;
+
+
 --
 -- TOC entry 3427 (class 2606 OID 16512)
 -- Name: categories categories_name_key; Type: CONSTRAINT; Schema: public; Owner: -

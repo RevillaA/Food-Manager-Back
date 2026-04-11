@@ -1,3 +1,19 @@
+const toDateOnlyString = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  if (typeof value === 'string') {
+    return value.split('T')[0];
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString().split('T')[0];
+  }
+
+  return String(value);
+};
+
 const toDailySessionResponse = (dailySession) => {
   if (!dailySession) {
     return null;
@@ -5,7 +21,7 @@ const toDailySessionResponse = (dailySession) => {
 
   return {
     id: dailySession.id,
-    session_date: dailySession.session_date,
+    session_date: toDateOnlyString(dailySession.session_date),
     status: dailySession.status,
     opened_at: dailySession.opened_at,
     closed_at: dailySession.closed_at,

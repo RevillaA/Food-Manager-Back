@@ -5,7 +5,9 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "docker:up": "docker compose up -d --build",
+    "docker:down": "docker compose down"
   },
   "keywords": [
     "node",

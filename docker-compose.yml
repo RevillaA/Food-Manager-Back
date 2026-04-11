@@ -18,21 +18,28 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
 
-  db-migrations:
-    image: postgres:16
-    container_name: restaurant_db_migrations
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: restaurant_api
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: restaurant_db
+      DB_USER: postgres
+      DB_PASSWORD: 123456
+      DB_SSL: false
+      JWT_SECRET: change_me_in_production
+      JWT_EXPIRES_IN: 1d
+    ports:
+      - "3000:3000"
     depends_on:
       postgres:
         condition: service_healthy
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: restaurant_db
-    volumes:
-      - ./database/migrations:/migrations:ro
-      - ./database/scripts/run-migrations.sh:/run-migrations.sh:ro
-    entrypoint: ["sh", "/run-migrations.sh"]
-    restart: "no"
     
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -45,7 +52,6 @@ services:
       - "8080:80"
     depends_on:
       - postgres
-      - db-migrations
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
