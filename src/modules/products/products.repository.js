@@ -1,4 +1,4 @@
-const { query } = require('../../database/pg/pool');
+const { query } = require("../../database/pg/pool");
 
 const PRODUCT_SELECT_FIELDS = `
   p.id,
@@ -14,36 +14,36 @@ const PRODUCT_SELECT_FIELDS = `
   c.is_active AS category_is_active
 `;
 
-const isClient = (value) => value && typeof value.query === 'function';
+const isClient = (value) => value && typeof value.query === "function";
 
 const getExecutor = (client) => {
-  return isClient(client) ? client.query.bind(client) : query;
+	return isClient(client) ? client.query.bind(client) : query;
 };
 
 const normalizeArgs = (clientOrValue, value) => {
-  if (isClient(clientOrValue)) {
-    return { client: clientOrValue, value };
-  }
+	if (isClient(clientOrValue)) {
+		return { client: clientOrValue, value };
+	}
 
-  return { client: null, value: clientOrValue };
+	return { client: null, value: clientOrValue };
 };
 
 const normalizeArgsTwoValues = (clientOrFirst, firstOrSecond, second) => {
-  if (isClient(clientOrFirst)) {
-    return { client: clientOrFirst, first: firstOrSecond, second };
-  }
+	if (isClient(clientOrFirst)) {
+		return { client: clientOrFirst, first: firstOrSecond, second };
+	}
 
-  return { client: null, first: clientOrFirst, second: firstOrSecond };
+	return { client: null, first: clientOrFirst, second: firstOrSecond };
 };
 
 const createProduct = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { category_id, name, description, base_price } = payload;
+	const { category_id, name, description, base_price } = payload;
 
-  const sql = `
+	const sql = `
     INSERT INTO products (
       category_id,
       name,
@@ -54,15 +54,15 @@ const createProduct = async (clientOrPayload, maybePayload) => {
     RETURNING id
   `;
 
-  const result = await exec(sql, [category_id, name, description, base_price]);
-  return result.rows[0];
+	const result = await exec(sql, [category_id, name, description, base_price]);
+	return result.rows[0];
 };
 
 const findProductById = async (clientOrId, maybeId) => {
-  const { client, value: id } = normalizeArgs(clientOrId, maybeId);
-  const exec = getExecutor(client);
+	const { client, value: id } = normalizeArgs(clientOrId, maybeId);
+	const exec = getExecutor(client);
 
-  const sql = `
+	const sql = `
     SELECT ${PRODUCT_SELECT_FIELDS}
     FROM products p
     INNER JOIN categories c ON c.id = p.category_id
@@ -70,19 +70,23 @@ const findProductById = async (clientOrId, maybeId) => {
     LIMIT 1
   `;
 
-  const result = await exec(sql, [id]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [id]);
+	return result.rows[0] || null;
 };
 
-const findProductByCategoryAndName = async (clientOrCategoryId, maybeCategoryId, maybeName) => {
-  const { client, first: category_id, second: name } = normalizeArgsTwoValues(
-    clientOrCategoryId,
-    maybeCategoryId,
-    maybeName
-  );
-  const exec = getExecutor(client);
+const findProductByCategoryAndName = async (
+	clientOrCategoryId,
+	maybeCategoryId,
+	maybeName,
+) => {
+	const {
+		client,
+		first: category_id,
+		second: name,
+	} = normalizeArgsTwoValues(clientOrCategoryId, maybeCategoryId, maybeName);
+	const exec = getExecutor(client);
 
-  const sql = `
+	const sql = `
     SELECT ${PRODUCT_SELECT_FIELDS}
     FROM products p
     INNER JOIN categories c ON c.id = p.category_id
@@ -91,18 +95,18 @@ const findProductByCategoryAndName = async (clientOrCategoryId, maybeCategoryId,
     LIMIT 1
   `;
 
-  const result = await exec(sql, [category_id, name]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [category_id, name]);
+	return result.rows[0] || null;
 };
 
 const updateProduct = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { id, category_id, name, description, base_price } = payload;
+	const { id, category_id, name, description, base_price } = payload;
 
-  const sql = `
+	const sql = `
     UPDATE products
     SET
       category_id = COALESCE($2, category_id),
@@ -113,52 +117,60 @@ const updateProduct = async (clientOrPayload, maybePayload) => {
     RETURNING id
   `;
 
-  const result = await exec(sql, [id, category_id, name, description, base_price]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [
+		id,
+		category_id,
+		name,
+		description,
+		base_price,
+	]);
+	return result.rows[0] || null;
 };
 
 const updateProductStatus = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { id, is_active } = payload;
+	const { id, is_active } = payload;
 
-  const sql = `
+	const sql = `
     UPDATE products
     SET is_active = $2
     WHERE id = $1
     RETURNING id
   `;
 
-  const result = await exec(sql, [id, is_active]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [id, is_active]);
+	return result.rows[0] || null;
 };
 
 const listProducts = async (clientOrFilters, maybeFilters) => {
-  const client = isClient(clientOrFilters) ? clientOrFilters : null;
-  const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrFilters) ? clientOrFilters : null;
+	const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
+	const exec = getExecutor(client);
 
-  const { limit, offset, is_active, category_id } = filters;
+	const { limit, offset, is_active, category_id } = filters;
 
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (typeof is_active === 'boolean') {
-    conditions.push(`p.is_active = $${paramIndex++}`);
-    values.push(is_active);
-  }
+	if (typeof is_active === "boolean") {
+		conditions.push(`p.is_active = $${paramIndex++}`);
+		values.push(is_active);
+	}
 
-  if (category_id) {
-    conditions.push(`p.category_id = $${paramIndex++}`);
-    values.push(category_id);
-  }
+	if (category_id) {
+		conditions.push(`p.category_id = $${paramIndex++}`);
+		values.push(category_id);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT ${PRODUCT_SELECT_FIELDS}
     FROM products p
     INNER JOIN categories c ON c.id = p.category_id
@@ -167,51 +179,53 @@ const listProducts = async (clientOrFilters, maybeFilters) => {
     LIMIT $${paramIndex++} OFFSET $${paramIndex++}
   `;
 
-  values.push(limit, offset);
+	values.push(limit, offset);
 
-  const result = await exec(sql, values);
-  return result.rows;
+	const result = await exec(sql, values);
+	return result.rows;
 };
 
 const countProducts = async (clientOrFilters, maybeFilters) => {
-  const client = isClient(clientOrFilters) ? clientOrFilters : null;
-  const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrFilters) ? clientOrFilters : null;
+	const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
+	const exec = getExecutor(client);
 
-  const { is_active, category_id } = filters;
+	const { is_active, category_id } = filters;
 
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (typeof is_active === 'boolean') {
-    conditions.push(`is_active = $${paramIndex++}`);
-    values.push(is_active);
-  }
+	if (typeof is_active === "boolean") {
+		conditions.push(`is_active = $${paramIndex++}`);
+		values.push(is_active);
+	}
 
-  if (category_id) {
-    conditions.push(`category_id = $${paramIndex++}`);
-    values.push(category_id);
-  }
+	if (category_id) {
+		conditions.push(`category_id = $${paramIndex++}`);
+		values.push(category_id);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT COUNT(*)::int AS total
     FROM products
     ${whereClause}
   `;
 
-  const result = await exec(sql, values);
-  return result.rows[0].total;
+	const result = await exec(sql, values);
+	return result.rows[0].total;
 };
 
 module.exports = {
-  createProduct,
-  findProductById,
-  findProductByCategoryAndName,
-  updateProduct,
-  updateProductStatus,
-  listProducts,
-  countProducts,
+	createProduct,
+	findProductById,
+	findProductByCategoryAndName,
+	updateProduct,
+	updateProductStatus,
+	listProducts,
+	countProducts,
 };

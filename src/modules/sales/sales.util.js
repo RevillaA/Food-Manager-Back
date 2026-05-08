@@ -9,23 +9,23 @@
  * @returns {string} - Sale identifier
  */
 const generateSaleIdentifier = (sessionDate, orderNumber, userName) => {
-  let dateString;
-  if (typeof sessionDate === 'string') {
-    dateString = sessionDate.replace(/-/g, '');
-  } else if (sessionDate instanceof Date) {
-    dateString = sessionDate.toISOString().slice(0, 10).replace(/-/g, '');
-  } else {
-    throw new Error('Invalid session date format');
-  }
+	let dateString;
+	if (typeof sessionDate === "string") {
+		dateString = sessionDate.replace(/-/g, "");
+	} else if (sessionDate instanceof Date) {
+		dateString = sessionDate.toISOString().slice(0, 10).replace(/-/g, "");
+	} else {
+		throw new Error("Invalid session date format");
+	}
 
-  const paddedOrderNumber = String(orderNumber).padStart(3, '0');
+	const paddedOrderNumber = String(orderNumber).padStart(3, "0");
 
-  const names = userName.trim().split(/\s+/);
-  const userInitial = names[names.length - 1]?.[0]?.toUpperCase() || 'X';
+	const names = userName.trim().split(/\s+/);
+	const userInitial = names[names.length - 1]?.[0]?.toUpperCase() || "X";
 
-  return `${dateString}_${paddedOrderNumber}_${userInitial}`;
+	return `${dateString}_${paddedOrderNumber}_${userInitial}`;
 };
 
 module.exports = {
-  generateSaleIdentifier,
+	generateSaleIdentifier,
 };

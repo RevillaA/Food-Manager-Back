@@ -25,16 +25,19 @@ services:
     container_name: restaurant_api
     restart: always
     environment:
-      NODE_ENV: production
-      PORT: 3000
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: restaurant_db
-      DB_USER: postgres
-      DB_PASSWORD: 123456
-      DB_SSL: false
-      JWT_SECRET: change_me_in_production
-      JWT_EXPIRES_IN: 1d
+      NODE_ENV: ${NODE_ENV:-production}
+      HOST: ${HOST:-0.0.0.0}
+      PORT: ${PORT:-3000}
+      DATABASE_URL: ${DATABASE_URL:-}
+      DATABASE_PUBLIC_URL: ${DATABASE_PUBLIC_URL:-}
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-restaurant_db}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-123456}
+      DB_SSL: ${DB_SSL:-false}
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1d}
     ports:
       - "3000:3000"
     depends_on:

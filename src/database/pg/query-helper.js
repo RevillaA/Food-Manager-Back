@@ -1,35 +1,35 @@
-const NotFoundError = require('../../common/errors/not-found-error');
+const NotFoundError = require("../../common/errors/not-found-error");
 
 const getRows = (result) => {
-  return result.rows;
+	return result.rows;
 };
 
 const getFirstRow = (result) => {
-  return result.rows[0] || null;
+	return result.rows[0] || null;
 };
 
-const requireFirstRow = (result, message = 'Resource not found') => {
-  const row = getFirstRow(result);
+const requireFirstRow = (result, message = "Resource not found") => {
+	const row = getFirstRow(result);
 
-  if (!row) {
-    throw new NotFoundError(message);
-  }
+	if (!row) {
+		throw new NotFoundError(message);
+	}
 
-  return row;
+	return row;
 };
 
 const getRowCount = (result) => {
-  return result.rowCount || 0;
+	return result.rowCount || 0;
 };
 
 const hasRows = (result) => {
-  return getRowCount(result) > 0;
+	return getRowCount(result) > 0;
 };
 
 module.exports = {
-  getRows,
-  getFirstRow,
-  requireFirstRow,
-  getRowCount,
-  hasRows,
+	getRows,
+	getFirstRow,
+	requireFirstRow,
+	getRowCount,
+	hasRows,
 };

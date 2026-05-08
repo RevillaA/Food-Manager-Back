@@ -1,52 +1,44 @@
-const express = require('express');
+const express = require("express");
 
-const salesController = require('./sales.controller');
-const salesValidator = require('./sales.validator');
+const salesController = require("./sales.controller");
+const salesValidator = require("./sales.validator");
 
-const authMiddleware = require('../../middlewares/auth.middleware');
-const roleMiddleware = require('../../middlewares/role.middleware');
-const ROLES = require('../../common/constants/roles.constants');
+const authMiddleware = require("../../middlewares/auth.middleware");
+const roleMiddleware = require("../../middlewares/role.middleware");
+const ROLES = require("../../common/constants/roles.constants");
 
 const router = express.Router();
 
 router.use(authMiddleware);
 router.use(roleMiddleware(ROLES.ADMIN, ROLES.CASHIER));
 
-router.post(
-  '/',
-  salesValidator.validateCreateSale,
-  salesController.createSale
-);
+router.post("/", salesValidator.validateCreateSale, salesController.createSale);
 
 router.patch(
-  '/:id/payment-status',
-  salesValidator.validateSaleIdParam,
-  salesValidator.validateUpdateSalePaymentStatus,
-  salesController.updateSalePaymentStatus
+	"/:id/payment-status",
+	salesValidator.validateSaleIdParam,
+	salesValidator.validateUpdateSalePaymentStatus,
+	salesController.updateSalePaymentStatus,
+);
+
+router.get("/", salesValidator.validateSalesFilters, salesController.getSales);
+
+router.get(
+	"/day",
+	salesValidator.validateSalesDayFilters,
+	salesController.getSalesOfToday,
 );
 
 router.get(
-  '/',
-  salesValidator.validateSalesFilters,
-  salesController.getSales
+	"/range",
+	salesValidator.validateSalesRangeFilters,
+	salesController.getSalesByRange,
 );
 
 router.get(
-  '/day',
-  salesValidator.validateSalesDayFilters,
-  salesController.getSalesOfToday
-);
-
-router.get(
-  '/range',
-  salesValidator.validateSalesRangeFilters,
-  salesController.getSalesByRange
-);
-
-router.get(
-  '/:id',
-  salesValidator.validateSaleIdParam,
-  salesController.getSaleById
+	"/:id",
+	salesValidator.validateSaleIdParam,
+	salesController.getSaleById,
 );
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { query } = require('../../database/pg/pool');
+const { query } = require("../../database/pg/pool");
 
 const DAILY_SESSION_SELECT_FIELDS = `
   ds.id,
@@ -17,28 +17,28 @@ const DAILY_SESSION_SELECT_FIELDS = `
   closer.username AS closed_by_username
 `;
 
-const isClient = (value) => value && typeof value.query === 'function';
+const isClient = (value) => value && typeof value.query === "function";
 
 const getExecutor = (client) => {
-  return isClient(client) ? client.query.bind(client) : query;
+	return isClient(client) ? client.query.bind(client) : query;
 };
 
 const normalizeArgs = (clientOrValue, value) => {
-  if (isClient(clientOrValue)) {
-    return { client: clientOrValue, value };
-  }
+	if (isClient(clientOrValue)) {
+		return { client: clientOrValue, value };
+	}
 
-  return { client: null, value: clientOrValue };
+	return { client: null, value: clientOrValue };
 };
 
 const createDailySession = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { session_date, opened_by_user_id, notes } = payload;
+	const { session_date, opened_by_user_id, notes } = payload;
 
-  const sql = `
+	const sql = `
     INSERT INTO daily_sessions (
       session_date,
       opened_by_user_id,
@@ -48,15 +48,15 @@ const createDailySession = async (clientOrPayload, maybePayload) => {
     RETURNING id
   `;
 
-  const result = await exec(sql, [session_date, opened_by_user_id, notes]);
-  return result.rows[0];
+	const result = await exec(sql, [session_date, opened_by_user_id, notes]);
+	return result.rows[0];
 };
 
 const findDailySessionById = async (clientOrId, maybeId) => {
-  const { client, value: id } = normalizeArgs(clientOrId, maybeId);
-  const exec = getExecutor(client);
+	const { client, value: id } = normalizeArgs(clientOrId, maybeId);
+	const exec = getExecutor(client);
 
-  const sql = `
+	const sql = `
     SELECT ${DAILY_SESSION_SELECT_FIELDS}
     FROM daily_sessions ds
     INNER JOIN users opener ON opener.id = ds.opened_by_user_id
@@ -65,15 +65,18 @@ const findDailySessionById = async (clientOrId, maybeId) => {
     LIMIT 1
   `;
 
-  const result = await exec(sql, [id]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [id]);
+	return result.rows[0] || null;
 };
 
 const findDailySessionByDate = async (clientOrDate, maybeDate) => {
-  const { client, value: session_date } = normalizeArgs(clientOrDate, maybeDate);
-  const exec = getExecutor(client);
+	const { client, value: session_date } = normalizeArgs(
+		clientOrDate,
+		maybeDate,
+	);
+	const exec = getExecutor(client);
 
-  const sql = `
+	const sql = `
     SELECT ${DAILY_SESSION_SELECT_FIELDS}
     FROM daily_sessions ds
     INNER JOIN users opener ON opener.id = ds.opened_by_user_id
@@ -82,14 +85,14 @@ const findDailySessionByDate = async (clientOrDate, maybeDate) => {
     LIMIT 1
   `;
 
-  const result = await exec(sql, [session_date]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [session_date]);
+	return result.rows[0] || null;
 };
 
 const findActiveDailySession = async (client = null) => {
-  const exec = getExecutor(client);
+	const exec = getExecutor(client);
 
-  const sql = `
+	const sql = `
     SELECT ${DAILY_SESSION_SELECT_FIELDS}
     FROM daily_sessions ds
     INNER JOIN users opener ON opener.id = ds.opened_by_user_id
@@ -99,18 +102,18 @@ const findActiveDailySession = async (client = null) => {
     LIMIT 1
   `;
 
-  const result = await exec(sql);
-  return result.rows[0] || null;
+	const result = await exec(sql);
+	return result.rows[0] || null;
 };
 
 const closeDailySession = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { id, closed_by_user_id, notes } = payload;
+	const { id, closed_by_user_id, notes } = payload;
 
-  const sql = `
+	const sql = `
     UPDATE daily_sessions
     SET
       status = 'CLOSED',
@@ -121,22 +124,22 @@ const closeDailySession = async (clientOrPayload, maybePayload) => {
     RETURNING id
   `;
 
-  const result = await exec(sql, [id, closed_by_user_id, notes]);
-  return result.rows[0] || null;
+	const result = await exec(sql, [id, closed_by_user_id, notes]);
+	return result.rows[0] || null;
 };
 
 const updateDailySessionStatus = async (clientOrPayload, maybePayload) => {
-  const client = isClient(clientOrPayload) ? clientOrPayload : null;
-  const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrPayload) ? clientOrPayload : null;
+	const payload = isClient(clientOrPayload) ? maybePayload : clientOrPayload;
+	const exec = getExecutor(client);
 
-  const { id, status, admin_user_id } = payload;
+	const { id, status, admin_user_id } = payload;
 
-  let sql = '';
-  let params = [];
+	let sql = "";
+	let params = [];
 
-  if (status === 'OPEN') {
-    sql = `
+	if (status === "OPEN") {
+		sql = `
       UPDATE daily_sessions
       SET
         status = 'OPEN',
@@ -145,11 +148,11 @@ const updateDailySessionStatus = async (clientOrPayload, maybePayload) => {
       WHERE id = $1
       RETURNING id
     `;
-    params = [id];
-  }
+		params = [id];
+	}
 
-  if (status === 'CLOSED') {
-    sql = `
+	if (status === "CLOSED") {
+		sql = `
       UPDATE daily_sessions
       SET
         status = 'CLOSED',
@@ -158,37 +161,39 @@ const updateDailySessionStatus = async (clientOrPayload, maybePayload) => {
       WHERE id = $1
       RETURNING id
     `;
-    params = [id, admin_user_id];
-  }
+		params = [id, admin_user_id];
+	}
 
-  const result = await exec(sql, params);
-  return result.rows[0] || null;
+	const result = await exec(sql, params);
+	return result.rows[0] || null;
 };
 
 const listDailySessions = async (clientOrFilters, maybeFilters) => {
-  const client = isClient(clientOrFilters) ? clientOrFilters : null;
-  const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrFilters) ? clientOrFilters : null;
+	const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
+	const exec = getExecutor(client);
 
-  const { limit, offset, status, session_date } = filters;
+	const { limit, offset, status, session_date } = filters;
 
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`ds.status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`ds.status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (session_date) {
-    conditions.push(`ds.session_date = $${paramIndex++}`);
-    values.push(session_date);
-  }
+	if (session_date) {
+		conditions.push(`ds.session_date = $${paramIndex++}`);
+		values.push(session_date);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT ${DAILY_SESSION_SELECT_FIELDS}
     FROM daily_sessions ds
     INNER JOIN users opener ON opener.id = ds.opened_by_user_id
@@ -198,52 +203,54 @@ const listDailySessions = async (clientOrFilters, maybeFilters) => {
     LIMIT $${paramIndex++} OFFSET $${paramIndex++}
   `;
 
-  values.push(limit, offset);
+	values.push(limit, offset);
 
-  const result = await exec(sql, values);
-  return result.rows;
+	const result = await exec(sql, values);
+	return result.rows;
 };
 
 const countDailySessions = async (clientOrFilters, maybeFilters) => {
-  const client = isClient(clientOrFilters) ? clientOrFilters : null;
-  const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
-  const exec = getExecutor(client);
+	const client = isClient(clientOrFilters) ? clientOrFilters : null;
+	const filters = isClient(clientOrFilters) ? maybeFilters : clientOrFilters;
+	const exec = getExecutor(client);
 
-  const { status, session_date } = filters;
+	const { status, session_date } = filters;
 
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (session_date) {
-    conditions.push(`session_date = $${paramIndex++}`);
-    values.push(session_date);
-  }
+	if (session_date) {
+		conditions.push(`session_date = $${paramIndex++}`);
+		values.push(session_date);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT COUNT(*)::int AS total
     FROM daily_sessions
     ${whereClause}
   `;
 
-  const result = await exec(sql, values);
-  return result.rows[0].total;
+	const result = await exec(sql, values);
+	return result.rows[0].total;
 };
 
 module.exports = {
-  createDailySession,
-  findDailySessionById,
-  findDailySessionByDate,
-  findActiveDailySession,
-  closeDailySession,
-  updateDailySessionStatus,
-  listDailySessions,
-  countDailySessions,
+	createDailySession,
+	findDailySessionById,
+	findDailySessionByDate,
+	findActiveDailySession,
+	closeDailySession,
+	updateDailySessionStatus,
+	listDailySessions,
+	countDailySessions,
 };

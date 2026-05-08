@@ -17,7 +17,7 @@ const SALES_SELECT_FIELDS = `
 `;
 
 const getDailySalesSummary = async (client, date) => {
-  const sql = `
+	const sql = `
     SELECT
       COALESCE(SUM(total), 0)::numeric(10,2) AS total_sales_amount,
       COUNT(*)::int AS total_sales_count
@@ -26,12 +26,12 @@ const getDailySalesSummary = async (client, date) => {
     WHERE ds.session_date = $1
   `;
 
-  const result = await client.query(sql, [date]);
-  return result.rows[0];
+	const result = await client.query(sql, [date]);
+	return result.rows[0];
 };
 
 const listDailySales = async (client, date) => {
-  const sql = `
+	const sql = `
     SELECT ${SALES_SELECT_FIELDS}
     FROM sales s
     INNER JOIN users u ON u.id = s.created_by_user_id
@@ -40,12 +40,12 @@ const listDailySales = async (client, date) => {
     ORDER BY s.sale_number ASC
   `;
 
-  const result = await client.query(sql, [date]);
-  return result.rows;
+	const result = await client.query(sql, [date]);
+	return result.rows;
 };
 
 const getDailyCategoryTotals = async (client, date) => {
-  const sql = `
+	const sql = `
     SELECT
       CASE
         WHEN LOWER(si.product_category_name) = 'platos' THEN 'MAIN_DISH'
@@ -63,12 +63,12 @@ const getDailyCategoryTotals = async (client, date) => {
     GROUP BY category_key
   `;
 
-  const result = await client.query(sql, [date]);
-  return result.rows;
+	const result = await client.query(sql, [date]);
+	return result.rows;
 };
 
 const getSalesRangeSummary = async (client, date_from, date_to) => {
-  const sql = `
+	const sql = `
     SELECT
       COALESCE(SUM(total), 0)::numeric(10,2) AS total_sales_amount,
       COUNT(*)::int AS total_sales_count
@@ -78,12 +78,15 @@ const getSalesRangeSummary = async (client, date_from, date_to) => {
       AND ds.session_date <= $2
   `;
 
-  const result = await client.query(sql, [date_from, date_to]);
-  return result.rows[0];
+	const result = await client.query(sql, [date_from, date_to]);
+	return result.rows[0];
 };
 
-const listSalesRange = async (client, { date_from, date_to, limit, offset }) => {
-  const sql = `
+const listSalesRange = async (
+	client,
+	{ date_from, date_to, limit, offset },
+) => {
+	const sql = `
     SELECT ${SALES_SELECT_FIELDS}
     FROM sales s
     INNER JOIN users u ON u.id = s.created_by_user_id
@@ -94,12 +97,12 @@ const listSalesRange = async (client, { date_from, date_to, limit, offset }) => 
     LIMIT $3 OFFSET $4
   `;
 
-  const result = await client.query(sql, [date_from, date_to, limit, offset]);
-  return result.rows;
+	const result = await client.query(sql, [date_from, date_to, limit, offset]);
+	return result.rows;
 };
 
 const countSalesRange = async (client, { date_from, date_to }) => {
-  const sql = `
+	const sql = `
     SELECT COUNT(*)::int AS total
     FROM sales s
     INNER JOIN daily_sessions ds ON ds.id = s.daily_session_id
@@ -107,12 +110,12 @@ const countSalesRange = async (client, { date_from, date_to }) => {
       AND ds.session_date <= $2
   `;
 
-  const result = await client.query(sql, [date_from, date_to]);
-  return result.rows[0].total;
+	const result = await client.query(sql, [date_from, date_to]);
+	return result.rows[0].total;
 };
 
 const getTopSellingProducts = async (client, { date_from, date_to, limit }) => {
-  const sql = `
+	const sql = `
     SELECT
       si.product_name,
       si.product_category_name,
@@ -128,12 +131,12 @@ const getTopSellingProducts = async (client, { date_from, date_to, limit }) => {
     LIMIT $3
   `;
 
-  const result = await client.query(sql, [date_from, date_to, limit]);
-  return result.rows;
+	const result = await client.query(sql, [date_from, date_to, limit]);
+	return result.rows;
 };
 
 const getCategorySummary = async (client, { date_from, date_to }) => {
-  const sql = `
+	const sql = `
     SELECT
       si.product_category_name,
       SUM(si.quantity)::int AS total_quantity,
@@ -147,17 +150,17 @@ const getCategorySummary = async (client, { date_from, date_to }) => {
     ORDER BY total_amount DESC
   `;
 
-  const result = await client.query(sql, [date_from, date_to]);
-  return result.rows;
+	const result = await client.query(sql, [date_from, date_to]);
+	return result.rows;
 };
 
 module.exports = {
-  getDailySalesSummary,
-  listDailySales,
-  getDailyCategoryTotals,
-  getSalesRangeSummary,
-  listSalesRange,
-  countSalesRange,
-  getTopSellingProducts,
-  getCategorySummary,
+	getDailySalesSummary,
+	listDailySales,
+	getDailyCategoryTotals,
+	getSalesRangeSummary,
+	listSalesRange,
+	countSalesRange,
+	getTopSellingProducts,
+	getCategorySummary,
 };

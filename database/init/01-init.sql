@@ -2,8 +2,6 @@
 -- PostgreSQL database dump
 --
 
-\restrict U4W1dXQyrof3jMyxUy4LrrA8SM7pWtWGolcAdGw4ZUV22ajZPaPxgoxn0napMe7
-
 -- Dumped from database version 16.13 (Debian 16.13-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10
 
@@ -390,46 +388,7 @@ CREATE TABLE public.users (
 INSERT INTO public.categories VALUES ('f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Platos', 'MAIN_DISH', 'Platos principales del restaurante', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
 INSERT INTO public.categories VALUES ('a5ab0006-fe0e-4f27-9d41-eb9c7ef2fa6c', 'Bebidas', 'DRINK', 'Bebidas frías o calientes', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
 INSERT INTO public.categories VALUES ('3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Extras', 'EXTRA', 'Complementos o agregados adicionales', true, '2026-03-25 01:49:15.567828+00', '2026-03-25 01:49:15.567828+00');
-INSERT INTO public.categories VALUES ('aded9029-08d6-427a-87c9-310a9a1b2783', 'Postres', 'SWEET', 'Postres y dulces del local', false, '2026-03-25 21:45:09.085348+00', '2026-03-25 21:49:36.466856+00');
-
-
---
--- TOC entry 3650 (class 0 OID 16537)
--- Dependencies: 220
--- Data for Name: daily_sessions; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.daily_sessions VALUES ('98fd26ca-d9af-4383-8df4-fafa2dde9979', '2026-03-28', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', NULL, 'OPEN', '2026-03-28 16:42:13.476926+00', NULL, NULL, '2026-03-28 16:42:13.476926+00', '2026-03-28 16:42:13.476926+00');
-INSERT INTO public.daily_sessions VALUES ('557330f0-6e73-48a5-b9b2-b51985edfd8c', '2026-03-26', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 'CLOSED', '2026-03-26 00:19:26.953336+00', '2026-03-28 16:44:01.35589+00', 'Auto-created when creating an order', '2026-03-26 00:19:26.953336+00', '2026-03-28 16:44:01.35589+00');
-
-
---
--- TOC entry 3652 (class 0 OID 16596)
--- Dependencies: 222
--- Data for Name: order_items; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.order_items VALUES ('fd594fcf-699b-4e75-b6df-8e9f41fc1858', '3151f9d8-4bb5-485e-bcac-118209413ffd', 'c284b510-9065-4cc1-b532-42737f695e71', 2, 0.80, 1.60, 'Fría', '2026-03-27 21:00:44.445473+00', '2026-03-27 21:00:44.445473+00', 'IN_PROGRESS', 'Agua 600 ml', 'Bebidas');
-INSERT INTO public.order_items VALUES ('2ede870b-61d6-44a6-913b-5dd0ef0e6f81', '6198241e-10ab-4426-a025-72c6a1c64b77', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 1, 1.50, 1.50, 'Sin hielo', '2026-03-28 16:11:38.012035+00', '2026-03-28 16:11:38.012035+00', 'IN_PROGRESS', 'Coca Cola 1 Litro', 'Bebidas');
-INSERT INTO public.order_items VALUES ('b114d99c-5dab-47d3-b872-ec47c8d97ca1', '405b5756-cb61-414b-8301-cfb821467025', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 7, 1.50, 10.50, 'Prueba', '2026-03-28 16:46:56.902874+00', '2026-03-28 16:46:56.902874+00', 'IN_PROGRESS', 'Coca Cola 1 Litro', 'Bebidas');
-INSERT INTO public.order_items VALUES ('736850f8-ddaa-433a-9693-9e060d97f8c6', '65b91096-f688-4ba4-9afd-67dd679474ab', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 7, 1.50, 10.50, 'Prueba', '2026-03-28 16:50:07.685491+00', '2026-03-28 16:50:07.685491+00', 'IN_PROGRESS', 'Coca Cola 1 Litro', 'Bebidas');
-INSERT INTO public.order_items VALUES ('50999cd5-6b67-4842-a306-18963d61ff5d', '6fa141a7-c26a-4d4d-abeb-19268aae659d', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 2, 1.50, 3.00, 'TEST SALES', '2026-03-28 17:18:35.040539+00', '2026-03-28 17:18:35.040539+00', 'IN_PROGRESS', 'Coca Cola 1 Litro', 'Bebidas');
-INSERT INTO public.order_items VALUES ('e9dc0891-3e8f-4590-856e-dfe00849f912', '9123e70c-06d6-47bc-ae57-92c8c3d42168', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 2, 1.50, 3.00, 'TEST SALES', '2026-03-28 17:26:34.137361+00', '2026-03-28 17:26:34.137361+00', 'IN_PROGRESS', 'Coca Cola 1 Litro', 'Bebidas');
-
-
---
--- TOC entry 3651 (class 0 OID 16563)
--- Dependencies: 221
--- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.orders VALUES ('3151f9d8-4bb5-485e-bcac-118209413ffd', '557330f0-6e73-48a5-b9b2-b51985edfd8c', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 1, 'OPEN', 'IN_PROGRESS', 1.60, 'Pedido de mesa 1', NULL, NULL, '2026-03-26 00:19:26.953336+00', '2026-03-27 21:03:31.433492+00');
-INSERT INTO public.orders VALUES ('6198241e-10ab-4426-a025-72c6a1c64b77', '557330f0-6e73-48a5-b9b2-b51985edfd8c', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 2, 'CLOSED', 'IN_PROGRESS', 1.50, 'Pedido finalizado', '2026-03-28 16:12:32.437989+00', NULL, '2026-03-26 00:21:37.699137+00', '2026-03-28 16:12:32.437989+00');
-INSERT INTO public.orders VALUES ('405b5756-cb61-414b-8301-cfb821467025', '98fd26ca-d9af-4383-8df4-fafa2dde9979', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 1, 'CLOSED', 'IN_PROGRESS', 10.50, 'Pedido finalizado', '2026-03-28 16:47:24.930794+00', NULL, '2026-03-28 16:45:26.620077+00', '2026-03-28 16:47:24.930794+00');
-INSERT INTO public.orders VALUES ('65b91096-f688-4ba4-9afd-67dd679474ab', '98fd26ca-d9af-4383-8df4-fafa2dde9979', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 2, 'CANCELLED', 'IN_PROGRESS', 10.50, 'Pedido TEST', NULL, '2026-03-28 16:52:06.161329+00', '2026-03-28 16:49:42.49781+00', '2026-03-28 16:52:06.161329+00');
-INSERT INTO public.orders VALUES ('6fa141a7-c26a-4d4d-abeb-19268aae659d', '98fd26ca-d9af-4383-8df4-fafa2dde9979', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 3, 'CLOSED', 'IN_PROGRESS', 3.00, 'Pedido finalizado', '2026-03-28 17:21:55.545599+00', NULL, '2026-03-28 17:17:46.565741+00', '2026-03-28 17:21:55.545599+00');
-INSERT INTO public.orders VALUES ('9123e70c-06d6-47bc-ae57-92c8c3d42168', '98fd26ca-d9af-4383-8df4-fafa2dde9979', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 4, 'CLOSED', 'IN_PROGRESS', 3.00, 'Pedido finalizado', '2026-03-28 17:27:39.180909+00', NULL, '2026-03-28 17:26:26.656419+00', '2026-03-28 17:27:39.180909+00');
-
+INSERT INTO public.categories VALUES ('aded9029-08d6-427a-87c9-310a9a1b2783', 'Postres', 'SWEET', 'Postres y dulces del local', true, '2026-03-25 21:45:09.085348+00', '2026-04-19 00:05:46.870394+00');
 
 --
 -- TOC entry 3649 (class 0 OID 16516)
@@ -437,10 +396,20 @@ INSERT INTO public.orders VALUES ('9123e70c-06d6-47bc-ae57-92c8c3d42168', '98fd2
 -- Data for Name: products; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.products VALUES ('9fe3812d-787d-404e-b1c3-5323e3a261c9', 'a5ab0006-fe0e-4f27-9d41-eb9c7ef2fa6c', 'Coca Cola 1 Litro', 'Bebida Coca Cola de 1 litro', 1.50, true, '2026-03-25 21:54:08.67075+00', '2026-03-25 21:54:08.67075+00');
-INSERT INTO public.products VALUES ('c284b510-9065-4cc1-b532-42737f695e71', 'a5ab0006-fe0e-4f27-9d41-eb9c7ef2fa6c', 'Agua 600 ml', 'Botella de agua de 600 ml', 0.80, true, '2026-03-25 21:54:38.267177+00', '2026-03-25 21:54:38.267177+00');
-INSERT INTO public.products VALUES ('3460ca1e-d1b1-49a7-9753-2e51a827158d', 'a5ab0006-fe0e-4f27-9d41-eb9c7ef2fa6c', 'Agua prueba', 'Botella de agua de 600 ml', 0.80, true, '2026-03-25 23:58:29.224793+00', '2026-03-25 23:58:29.224793+00');
-
+INSERT INTO public.products VALUES ('318b6b11-82f3-4de0-97ba-9506a8892094', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Salchipapa', 'Papas con salchicha', 1.50, true, '2026-04-19 00:01:26.421712+00', '2026-04-19 00:01:26.421712+00');
+INSERT INTO public.products VALUES ('c9f0bc75-0ad4-4d00-8ecc-e3a094aab2d4', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Papi pollo', 'Papas con pollo', 2.25, true, '2026-04-19 00:01:42.517548+00', '2026-04-19 00:01:42.517548+00');
+INSERT INTO public.products VALUES ('5f55b4d4-de69-4796-a76a-e55325ddf29f', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Papi carne', 'Papas con carne', 1.80, true, '2026-04-19 00:01:56.415671+00', '2026-04-19 00:01:56.415671+00');
+INSERT INTO public.products VALUES ('1d02df7a-a037-40b6-b593-7c07d3344625', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Papi huevo', 'Papas con huevo', 1.40, true, '2026-04-19 00:02:09.217266+00', '2026-04-19 00:02:09.217266+00');
+INSERT INTO public.products VALUES ('c2e6b029-c6e4-4483-b3ad-2260814a3d19', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Morocho con empanada', 'Morocho acompañado de empanada', 1.25, true, '2026-04-19 00:02:23.280796+00', '2026-04-19 00:02:23.280796+00');
+INSERT INTO public.products VALUES ('000fe6ac-1744-4bea-93e9-934f9db5b0ec', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Papa completa', 'Papas con salchicha acompañado de carne y huevo', 2.50, true, '2026-04-19 00:02:49.82078+00', '2026-04-19 00:02:49.82078+00');
+INSERT INTO public.products VALUES ('bf8e4ffb-8e96-4417-ba9b-a21fcc0bda5d', 'f1e80a95-3ba6-45d7-9bee-b791415dac11', 'Super papa', 'Papas acompañadas con salchicha, pollo, carne y huevo', 3.50, true, '2026-04-19 00:03:18.612903+00', '2026-04-19 00:03:18.612903+00');
+INSERT INTO public.products VALUES ('b3da23db-e88e-4517-9998-a144d34e1e6c', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Salchicha', 'Porción adicional de salchicha', 0.60, true, '2026-04-19 00:03:44.352966+00', '2026-04-19 00:03:44.352966+00');
+INSERT INTO public.products VALUES ('a0ac2ef2-d7f0-4c0c-aa0e-c5a5f9e63b7f', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Huevo', 'Porción adicional de huevo', 0.30, true, '2026-04-19 00:03:58.106387+00', '2026-04-19 00:03:58.106387+00');
+INSERT INTO public.products VALUES ('ff4e0002-4a2f-4826-8e31-791ecb2fd11d', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Carne', 'Porción adicional de carne', 0.80, true, '2026-04-19 00:04:10.522872+00', '2026-04-19 00:04:10.522872+00');
+INSERT INTO public.products VALUES ('f5043ba6-d9d6-4b6d-ae59-fe960da95218', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Presa pollo', 'Porción adicional de pollo', 1.00, true, '2026-04-19 00:04:29.257404+00', '2026-04-19 00:04:29.257404+00');
+INSERT INTO public.products VALUES ('0ca249e2-a2af-4465-9001-a91da13489f2', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Empanada', 'Empanada adicional', 0.25, true, '2026-04-19 00:04:44.340241+00', '2026-04-19 00:04:44.340241+00');
+INSERT INTO public.products VALUES ('23a7b8b8-273f-47d3-98e0-bfb214dc6ae7', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Porción papas', 'Porción adicional de papas', 1.00, true, '2026-04-19 00:05:00.083804+00', '2026-04-19 00:05:00.083804+00');
+INSERT INTO public.products VALUES ('41de290b-81b0-4f7b-a1fc-b29bee95157c', '3b1bec30-6daa-49f0-b57c-83e8817c4472', 'Vaso morocho', 'Vaso de morocho', 1.00, true, '2026-04-19 00:05:20.286122+00', '2026-04-19 00:05:20.286122+00');
 
 --
 -- TOC entry 3646 (class 0 OID 16468)
@@ -451,27 +420,6 @@ INSERT INTO public.products VALUES ('3460ca1e-d1b1-49a7-9753-2e51a827158d', 'a5a
 INSERT INTO public.roles VALUES ('ee075d68-da76-4b23-bb2f-a2520d1209f1', 'ADMIN', 'System administrator with full access', '2026-03-25 01:49:15.56354+00', '2026-03-25 01:49:15.56354+00');
 INSERT INTO public.roles VALUES ('e2f66554-1732-4bc4-bf04-52b9739b692f', 'CASHIER', 'Cashier with access to orders and sales only', '2026-03-25 01:49:15.56354+00', '2026-03-25 01:49:15.56354+00');
 
-
---
--- TOC entry 3654 (class 0 OID 16660)
--- Dependencies: 224
--- Data for Name: sale_items; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.sale_items VALUES ('bf9dc502-cbf8-4018-8881-ab2dcab1f50e', 'f965291e-be3c-4522-ac48-212d3326ba48', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 2, 1.50, 3.00, '2026-03-28 17:22:05.112247+00', '2026-03-28 17:22:05.112247+00', 'Coca Cola 1 Litro', 'Bebidas');
-INSERT INTO public.sale_items VALUES ('88bfde94-7c83-4fb6-a8f6-99e7fda70f83', 'acc5780e-5f20-4b75-a393-374604e1512f', '9fe3812d-787d-404e-b1c3-5323e3a261c9', 2, 1.50, 3.00, '2026-03-28 17:27:46.745862+00', '2026-03-28 17:27:46.745862+00', 'Coca Cola 1 Litro', 'Bebidas');
-
-
---
--- TOC entry 3653 (class 0 OID 16620)
--- Dependencies: 223
--- Data for Name: sales; Type: TABLE DATA; Schema: public; Owner: -
---
-
-INSERT INTO public.sales VALUES ('f965291e-be3c-4522-ac48-212d3326ba48', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '6fa141a7-c26a-4d4d-abeb-19268aae659d', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 1, '20260328_0001_I', 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:22:05.119+00', 'cobro en caja', '2026-03-28 17:22:05.112247+00', '2026-03-28 17:22:05.112247+00');
-INSERT INTO public.sales VALUES ('acc5780e-5f20-4b75-a393-374604e1512f', '98fd26ca-d9af-4383-8df4-fafa2dde9979', '9123e70c-06d6-47bc-ae57-92c8c3d42168', 'ed74c33a-5cf3-495a-b6ca-40c18a77f235', 2, '20260328_0002_I', 'PAID', 'CASH', 3.00, 3.00, '2026-03-28 17:27:46.749+00', 'Pago efectivo', '2026-03-28 17:27:46.745862+00', '2026-03-28 17:27:46.745862+00');
-
-
 --
 -- TOC entry 3647 (class 0 OID 16479)
 -- Dependencies: 217
@@ -479,7 +427,8 @@ INSERT INTO public.sales VALUES ('acc5780e-5f20-4b75-a393-374604e1512f', '98fd26
 --
 
 INSERT INTO public.users VALUES ('ed74c33a-5cf3-495a-b6ca-40c18a77f235', 'ee075d68-da76-4b23-bb2f-a2520d1209f1', 'Administrador Inicial', 'admin', 'admin@esquinarevis.com', '$2b$10$djODe7E0eXzBk4BhEsZ3O.angK00k.j0SjG6hWtIbDm3ABwLG7a7i', true, '2026-03-25 17:38:45.056564+00', '2026-03-25 17:38:45.056564+00');
-INSERT INTO public.users VALUES ('8e444364-97a3-4e1e-bcbb-3e51236bd263', 'e2f66554-1732-4bc4-bf04-52b9739b692f', 'Cajero Editado', 'cajero', 'cajero_editado@esquinarevis.com', '$2b$10$RWQkFkm3dPimYN2uQBgHhuyawZK3KnEYr6ocuz/MnsK5t3nlXy9Ga', true, '2026-03-25 17:53:50.943922+00', '2026-03-25 21:47:51.502428+00');
+INSERT INTO public.users VALUES ('ffb30138-cdcd-4a24-bbb4-0f8f647593da', 'ee075d68-da76-4b23-bb2f-a2520d1209f1', 'Felipe Revilla', 'frevilla', 'felipe@esquinarevis.com', '$2b$10$saKxdl3M6/JXWtkZJu69P.pnNDmpONGlMrL7/V0DMaN7pJIYXZUFO', true, '2026-04-18 23:59:42.072652+00', '2026-04-18 23:59:42.072652+00');
+INSERT INTO public.users VALUES ('b9ba3d1b-ea5e-45ec-952b-30d0266e1392', 'e2f66554-1732-4bc4-bf04-52b9739b692f', 'Sebastian Revilla', 'srevilla', 'sebastian@esquinarevis.com', '$2b$10$WXCM2sC2moyROLvKm.Qtxev2vMUGLO6JAtkOgT60m1Oihj8QjtnFS', true, '2026-04-19 00:00:02.709739+00', '2026-04-19 00:00:02.709739+00');
 
 
 -- =====================================================
@@ -1133,5 +1082,3 @@ ALTER TABLE ONLY public.users
 --
 -- PostgreSQL database dump complete
 --
-
-\unrestrict U4W1dXQyrof3jMyxUy4LrrA8SM7pWtWGolcAdGw4ZUV22ajZPaPxgoxn0napMe7

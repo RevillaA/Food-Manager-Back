@@ -14,43 +14,43 @@ const ORDER_ITEM_SELECT_FIELDS = `
 `;
 
 const listOrderItemsByOrderId = async (client, order_id) => {
-  const sql = `
+	const sql = `
     SELECT ${ORDER_ITEM_SELECT_FIELDS}
     FROM order_items oi
     WHERE oi.order_id = $1
     ORDER BY oi.created_at ASC
   `;
 
-  const result = await client.query(sql, [order_id]);
-  return result.rows;
+	const result = await client.query(sql, [order_id]);
+	return result.rows;
 };
 
 const findOrderItemById = async (client, itemId) => {
-  const sql = `
+	const sql = `
     SELECT ${ORDER_ITEM_SELECT_FIELDS}
     FROM order_items oi
     WHERE oi.id = $1
     LIMIT 1
   `;
 
-  const result = await client.query(sql, [itemId]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [itemId]);
+	return result.rows[0] || null;
 };
 
 const createOrderItem = async (
-  client,
-  {
-    order_id,
-    product_id,
-    product_name,
-    product_category_name,
-    quantity,
-    unit_price,
-    line_total,
-    notes,
-  }
+	client,
+	{
+		order_id,
+		product_id,
+		product_name,
+		product_category_name,
+		quantity,
+		unit_price,
+		line_total,
+		notes,
+	},
 ) => {
-  const sql = `
+	const sql = `
     INSERT INTO order_items (
       order_id,
       product_id,
@@ -65,22 +65,25 @@ const createOrderItem = async (
     RETURNING id
   `;
 
-  const result = await client.query(sql, [
-    order_id,
-    product_id,
-    product_name,
-    product_category_name,
-    quantity,
-    unit_price,
-    line_total,
-    notes,
-  ]);
+	const result = await client.query(sql, [
+		order_id,
+		product_id,
+		product_name,
+		product_category_name,
+		quantity,
+		unit_price,
+		line_total,
+		notes,
+	]);
 
-  return result.rows[0];
+	return result.rows[0];
 };
 
-const updateOrderItem = async (client, { itemId, quantity, line_total, notes }) => {
-  const sql = `
+const updateOrderItem = async (
+	client,
+	{ itemId, quantity, line_total, notes },
+) => {
+	const sql = `
     UPDATE order_items
     SET
       quantity = COALESCE($2, quantity),
@@ -90,35 +93,38 @@ const updateOrderItem = async (client, { itemId, quantity, line_total, notes }) 
     RETURNING id
   `;
 
-  const result = await client.query(sql, [itemId, quantity, line_total, notes]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [itemId, quantity, line_total, notes]);
+	return result.rows[0] || null;
 };
 
-const updateOrderItemPreparationStatus = async (client, { itemId, preparation_status }) => {
-  const sql = `
+const updateOrderItemPreparationStatus = async (
+	client,
+	{ itemId, preparation_status },
+) => {
+	const sql = `
     UPDATE order_items
     SET preparation_status = $2
     WHERE id = $1
     RETURNING id
   `;
 
-  const result = await client.query(sql, [itemId, preparation_status]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [itemId, preparation_status]);
+	return result.rows[0] || null;
 };
 
 const deleteOrderItem = async (client, itemId) => {
-  const sql = `
+	const sql = `
     DELETE FROM order_items
     WHERE id = $1
     RETURNING id
   `;
 
-  const result = await client.query(sql, [itemId]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [itemId]);
+	return result.rows[0] || null;
 };
 
 const calculateOrderPreparationStatus = async (client, order_id) => {
-  const sql = `
+	const sql = `
     SELECT
       CASE
         WHEN COUNT(*) = 0 THEN 'IN_PROGRESS'
@@ -129,16 +135,16 @@ const calculateOrderPreparationStatus = async (client, order_id) => {
     WHERE order_id = $1
   `;
 
-  const result = await client.query(sql, [order_id]);
-  return result.rows[0].preparation_status;
+	const result = await client.query(sql, [order_id]);
+	return result.rows[0].preparation_status;
 };
 
 module.exports = {
-  listOrderItemsByOrderId,
-  findOrderItemById,
-  createOrderItem,
-  updateOrderItem,
-  updateOrderItemPreparationStatus,
-  deleteOrderItem,
-  calculateOrderPreparationStatus,
+	listOrderItemsByOrderId,
+	findOrderItemById,
+	createOrderItem,
+	updateOrderItem,
+	updateOrderItemPreparationStatus,
+	deleteOrderItem,
+	calculateOrderPreparationStatus,
 };

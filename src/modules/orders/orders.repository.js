@@ -16,7 +16,7 @@ const ORDER_SELECT_FIELDS = `
 `;
 
 const findOrderById = async (client, id) => {
-  const sql = `
+	const sql = `
     SELECT ${ORDER_SELECT_FIELDS}
     FROM orders o
     INNER JOIN users u ON u.id = o.created_by_user_id
@@ -24,33 +24,38 @@ const findOrderById = async (client, id) => {
     LIMIT 1
   `;
 
-  const result = await client.query(sql, [id]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [id]);
+	return result.rows[0] || null;
 };
 
-const listOrders = async (client, { limit, offset, status, preparation_status, daily_session_id }) => {
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+const listOrders = async (
+	client,
+	{ limit, offset, status, preparation_status, daily_session_id },
+) => {
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`o.status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`o.status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (preparation_status) {
-    conditions.push(`o.preparation_status = $${paramIndex++}`);
-    values.push(preparation_status);
-  }
+	if (preparation_status) {
+		conditions.push(`o.preparation_status = $${paramIndex++}`);
+		values.push(preparation_status);
+	}
 
-  if (daily_session_id) {
-    conditions.push(`o.daily_session_id = $${paramIndex++}`);
-    values.push(daily_session_id);
-  }
+	if (daily_session_id) {
+		conditions.push(`o.daily_session_id = $${paramIndex++}`);
+		values.push(daily_session_id);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT ${ORDER_SELECT_FIELDS}
     FROM orders o
     INNER JOIN users u ON u.id = o.created_by_user_id
@@ -59,10 +64,10 @@ const listOrders = async (client, { limit, offset, status, preparation_status, d
     LIMIT $${paramIndex++} OFFSET $${paramIndex++}
   `;
 
-  values.push(limit, offset);
+	values.push(limit, offset);
 
-  const result = await client.query(sql, values);
-  return result.rows;
+	const result = await client.query(sql, values);
+	return result.rows;
 };
 
 const PAYMENT_STATE_SQL = `
@@ -75,36 +80,45 @@ const PAYMENT_STATE_SQL = `
 `;
 
 const listOrdersBoard = async (
-  client,
-  { limit, offset, status, preparation_status, daily_session_id, payment_state }
+	client,
+	{
+		limit,
+		offset,
+		status,
+		preparation_status,
+		daily_session_id,
+		payment_state,
+	},
 ) => {
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`o.status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`o.status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (preparation_status) {
-    conditions.push(`o.preparation_status = $${paramIndex++}`);
-    values.push(preparation_status);
-  }
+	if (preparation_status) {
+		conditions.push(`o.preparation_status = $${paramIndex++}`);
+		values.push(preparation_status);
+	}
 
-  if (daily_session_id) {
-    conditions.push(`o.daily_session_id = $${paramIndex++}`);
-    values.push(daily_session_id);
-  }
+	if (daily_session_id) {
+		conditions.push(`o.daily_session_id = $${paramIndex++}`);
+		values.push(daily_session_id);
+	}
 
-  if (payment_state) {
-    conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
-    values.push(payment_state);
-  }
+	if (payment_state) {
+		conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
+		values.push(payment_state);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT
       ${ORDER_SELECT_FIELDS},
       ${PAYMENT_STATE_SQL} AS payment_state
@@ -116,98 +130,108 @@ const listOrdersBoard = async (
     LIMIT $${paramIndex++} OFFSET $${paramIndex++}
   `;
 
-  values.push(limit, offset);
+	values.push(limit, offset);
 
-  const result = await client.query(sql, values);
-  return result.rows;
+	const result = await client.query(sql, values);
+	return result.rows;
 };
 
-const countOrders = async (client, { status, preparation_status, daily_session_id }) => {
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+const countOrders = async (
+	client,
+	{ status, preparation_status, daily_session_id },
+) => {
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (preparation_status) {
-    conditions.push(`preparation_status = $${paramIndex++}`);
-    values.push(preparation_status);
-  }
+	if (preparation_status) {
+		conditions.push(`preparation_status = $${paramIndex++}`);
+		values.push(preparation_status);
+	}
 
-  if (daily_session_id) {
-    conditions.push(`daily_session_id = $${paramIndex++}`);
-    values.push(daily_session_id);
-  }
+	if (daily_session_id) {
+		conditions.push(`daily_session_id = $${paramIndex++}`);
+		values.push(daily_session_id);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT COUNT(*)::int AS total
     FROM orders
     ${whereClause}
   `;
 
-  const result = await client.query(sql, values);
-  return result.rows[0].total;
+	const result = await client.query(sql, values);
+	return result.rows[0].total;
 };
 
 const countOrdersBoard = async (
-  client,
-  { status, preparation_status, daily_session_id, payment_state }
+	client,
+	{ status, preparation_status, daily_session_id, payment_state },
 ) => {
-  const conditions = [];
-  const values = [];
-  let paramIndex = 1;
+	const conditions = [];
+	const values = [];
+	let paramIndex = 1;
 
-  if (status) {
-    conditions.push(`o.status = $${paramIndex++}`);
-    values.push(status);
-  }
+	if (status) {
+		conditions.push(`o.status = $${paramIndex++}`);
+		values.push(status);
+	}
 
-  if (preparation_status) {
-    conditions.push(`o.preparation_status = $${paramIndex++}`);
-    values.push(preparation_status);
-  }
+	if (preparation_status) {
+		conditions.push(`o.preparation_status = $${paramIndex++}`);
+		values.push(preparation_status);
+	}
 
-  if (daily_session_id) {
-    conditions.push(`o.daily_session_id = $${paramIndex++}`);
-    values.push(daily_session_id);
-  }
+	if (daily_session_id) {
+		conditions.push(`o.daily_session_id = $${paramIndex++}`);
+		values.push(daily_session_id);
+	}
 
-  if (payment_state) {
-    conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
-    values.push(payment_state);
-  }
+	if (payment_state) {
+		conditions.push(`${PAYMENT_STATE_SQL} = $${paramIndex++}`);
+		values.push(payment_state);
+	}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+	const whereClause = conditions.length
+		? `WHERE ${conditions.join(" AND ")}`
+		: "";
 
-  const sql = `
+	const sql = `
     SELECT COUNT(*)::int AS total
     FROM orders o
     LEFT JOIN sales s ON s.order_id = o.id
     ${whereClause}
   `;
 
-  const result = await client.query(sql, values);
-  return result.rows[0].total;
+	const result = await client.query(sql, values);
+	return result.rows[0].total;
 };
 
 const getNextOrderNumber = async (client, daily_session_id) => {
-  const sql = `
+	const sql = `
     SELECT COALESCE(MAX(order_number), 0)::int + 1 AS next_order_number
     FROM orders
     WHERE daily_session_id = $1
   `;
 
-  const result = await client.query(sql, [daily_session_id]);
-  return result.rows[0].next_order_number;
+	const result = await client.query(sql, [daily_session_id]);
+	return result.rows[0].next_order_number;
 };
 
-const createOrder = async (client, { daily_session_id, created_by_user_id, order_number, notes }) => {
-  const sql = `
+const createOrder = async (
+	client,
+	{ daily_session_id, created_by_user_id, order_number, notes },
+) => {
+	const sql = `
     INSERT INTO orders (
       daily_session_id,
       created_by_user_id,
@@ -218,30 +242,33 @@ const createOrder = async (client, { daily_session_id, created_by_user_id, order
     RETURNING id
   `;
 
-  const result = await client.query(sql, [
-    daily_session_id,
-    created_by_user_id,
-    order_number,
-    notes,
-  ]);
+	const result = await client.query(sql, [
+		daily_session_id,
+		created_by_user_id,
+		order_number,
+		notes,
+	]);
 
-  return result.rows[0];
+	return result.rows[0];
 };
 
-const updateOrderPreparationStatus = async (client, { id, preparation_status }) => {
-  const sql = `
+const updateOrderPreparationStatus = async (
+	client,
+	{ id, preparation_status },
+) => {
+	const sql = `
     UPDATE orders
     SET preparation_status = $2
     WHERE id = $1
     RETURNING id
   `;
 
-  const result = await client.query(sql, [id, preparation_status]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [id, preparation_status]);
+	return result.rows[0] || null;
 };
 
 const cancelOrder = async (client, { id, notes }) => {
-  const sql = `
+	const sql = `
     UPDATE orders
     SET
       status = 'CANCELLED',
@@ -251,12 +278,12 @@ const cancelOrder = async (client, { id, notes }) => {
     RETURNING id
   `;
 
-  const result = await client.query(sql, [id, notes]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [id, notes]);
+	return result.rows[0] || null;
 };
 
 const closeOrder = async (client, { id, notes }) => {
-  const sql = `
+	const sql = `
     UPDATE orders
     SET
       status = 'CLOSED',
@@ -266,19 +293,19 @@ const closeOrder = async (client, { id, notes }) => {
     RETURNING id
   `;
 
-  const result = await client.query(sql, [id, notes]);
-  return result.rows[0] || null;
+	const result = await client.query(sql, [id, notes]);
+	return result.rows[0] || null;
 };
 
 module.exports = {
-  findOrderById,
-  listOrders,
-  listOrdersBoard,
-  countOrders,
-  countOrdersBoard,
-  getNextOrderNumber,
-  createOrder,
-  updateOrderPreparationStatus,
-  cancelOrder,
-  closeOrder,
+	findOrderById,
+	listOrders,
+	listOrdersBoard,
+	countOrders,
+	countOrdersBoard,
+	getNextOrderNumber,
+	createOrder,
+	updateOrderPreparationStatus,
+	cancelOrder,
+	closeOrder,
 };

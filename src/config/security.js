@@ -1,7 +1,7 @@
-const helmet = require('helmet');
+const helmet = require("helmet");
 
 const securityMiddleware = helmet({
-  crossOriginResourcePolicy: false,
+	crossOriginResourcePolicy: false,
 });
 
 module.exports = securityMiddleware;

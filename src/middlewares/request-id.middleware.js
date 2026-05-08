@@ -1,12 +1,12 @@
-const crypto = require('crypto');
+const crypto = require("crypto");
 
 const requestIdMiddleware = (req, res, next) => {
-  const incomingRequestId = req.headers['x-request-id'];
+	const incomingRequestId = req.headers["x-request-id"];
 
-  req.requestId = incomingRequestId || crypto.randomUUID();
-  res.setHeader('x-request-id', req.requestId);
+	req.requestId = incomingRequestId || crypto.randomUUID();
+	res.setHeader("x-request-id", req.requestId);
 
-  next();
+	next();
 };
 
 module.exports = requestIdMiddleware;

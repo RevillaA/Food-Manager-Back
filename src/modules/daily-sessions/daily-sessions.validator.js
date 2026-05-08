@@ -1,25 +1,37 @@
-const validateMiddleware = require('../../middlewares/validate.middleware');
+const validateMiddleware = require("../../middlewares/validate.middleware");
 const {
-  openDailySessionSchema,
-  closeDailySessionSchema,
-  updateDailySessionStatusSchema,
-  dailySessionsFilterSchema,
-  dailySessionIdParamSchema,
-} = require('./daily-sessions.schemas');
+	openDailySessionSchema,
+	closeDailySessionSchema,
+	updateDailySessionStatusSchema,
+	dailySessionsFilterSchema,
+	dailySessionIdParamSchema,
+} = require("./daily-sessions.schemas");
 
-const validateOpenDailySession = validateMiddleware(openDailySessionSchema, 'body');
-const validateCloseDailySession = validateMiddleware(closeDailySessionSchema, 'body');
-const validateUpdateDailySessionStatus = validateMiddleware(
-  updateDailySessionStatusSchema,
-  'body'
+const validateOpenDailySession = validateMiddleware(
+	openDailySessionSchema,
+	"body",
 );
-const validateDailySessionsFilters = validateMiddleware(dailySessionsFilterSchema, 'query');
-const validateDailySessionIdParam = validateMiddleware(dailySessionIdParamSchema, 'params');
+const validateCloseDailySession = validateMiddleware(
+	closeDailySessionSchema,
+	"body",
+);
+const validateUpdateDailySessionStatus = validateMiddleware(
+	updateDailySessionStatusSchema,
+	"body",
+);
+const validateDailySessionsFilters = validateMiddleware(
+	dailySessionsFilterSchema,
+	"query",
+);
+const validateDailySessionIdParam = validateMiddleware(
+	dailySessionIdParamSchema,
+	"params",
+);
 
 module.exports = {
-  validateOpenDailySession,
-  validateCloseDailySession,
-  validateUpdateDailySessionStatus,
-  validateDailySessionsFilters,
-  validateDailySessionIdParam,
+	validateOpenDailySession,
+	validateCloseDailySession,
+	validateUpdateDailySessionStatus,
+	validateDailySessionsFilters,
+	validateDailySessionIdParam,
 };

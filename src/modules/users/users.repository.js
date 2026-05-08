@@ -1,4 +1,4 @@
-const { query } = require('../../database/pg/pool');
+const { query } = require("../../database/pg/pool");
 
 const USER_SELECT_FIELDS = `
   u.id,
@@ -14,19 +14,19 @@ const USER_SELECT_FIELDS = `
 `;
 
 const findRoleByName = async (roleName) => {
-  const sql = `
+	const sql = `
     SELECT id, name, description
     FROM roles
     WHERE name = $1
     LIMIT 1
   `;
 
-  const result = await query(sql, [roleName]);
-  return result.rows[0] || null;
+	const result = await query(sql, [roleName]);
+	return result.rows[0] || null;
 };
 
 const findUserById = async (id) => {
-  const sql = `
+	const sql = `
     SELECT ${USER_SELECT_FIELDS}
     FROM users u
     INNER JOIN roles r ON r.id = u.role_id
@@ -34,12 +34,12 @@ const findUserById = async (id) => {
     LIMIT 1
   `;
 
-  const result = await query(sql, [id]);
-  return result.rows[0] || null;
+	const result = await query(sql, [id]);
+	return result.rows[0] || null;
 };
 
 const findUserWithPasswordByUsername = async (username) => {
-  const sql = `
+	const sql = `
     SELECT
       u.id,
       u.full_name,
@@ -58,12 +58,12 @@ const findUserWithPasswordByUsername = async (username) => {
     LIMIT 1
   `;
 
-  const result = await query(sql, [username]);
-  return result.rows[0] || null;
+	const result = await query(sql, [username]);
+	return result.rows[0] || null;
 };
 
 const findUserByUsername = async (username) => {
-  const sql = `
+	const sql = `
     SELECT ${USER_SELECT_FIELDS}
     FROM users u
     INNER JOIN roles r ON r.id = u.role_id
@@ -71,12 +71,12 @@ const findUserByUsername = async (username) => {
     LIMIT 1
   `;
 
-  const result = await query(sql, [username]);
-  return result.rows[0] || null;
+	const result = await query(sql, [username]);
+	return result.rows[0] || null;
 };
 
 const findUserByEmail = async (email) => {
-  const sql = `
+	const sql = `
     SELECT ${USER_SELECT_FIELDS}
     FROM users u
     INNER JOIN roles r ON r.id = u.role_id
@@ -84,12 +84,18 @@ const findUserByEmail = async (email) => {
     LIMIT 1
   `;
 
-  const result = await query(sql, [email]);
-  return result.rows[0] || null;
+	const result = await query(sql, [email]);
+	return result.rows[0] || null;
 };
 
-const createUser = async ({ full_name, username, email, password_hash, role_id }) => {
-  const sql = `
+const createUser = async ({
+	full_name,
+	username,
+	email,
+	password_hash,
+	role_id,
+}) => {
+	const sql = `
     INSERT INTO users (
       role_id,
       full_name,
@@ -101,19 +107,19 @@ const createUser = async ({ full_name, username, email, password_hash, role_id }
     RETURNING id
   `;
 
-  const result = await query(sql, [
-    role_id,
-    full_name,
-    username,
-    email,
-    password_hash,
-  ]);
+	const result = await query(sql, [
+		role_id,
+		full_name,
+		username,
+		email,
+		password_hash,
+	]);
 
-  return result.rows[0];
+	return result.rows[0];
 };
 
 const updateUser = async ({ id, full_name, username, email, role_id }) => {
-  const sql = `
+	const sql = `
     UPDATE users
     SET
       full_name = COALESCE($2, full_name),
@@ -124,24 +130,24 @@ const updateUser = async ({ id, full_name, username, email, role_id }) => {
     RETURNING id
   `;
 
-  const result = await query(sql, [id, full_name, username, email, role_id]);
-  return result.rows[0] || null;
+	const result = await query(sql, [id, full_name, username, email, role_id]);
+	return result.rows[0] || null;
 };
 
 const updateUserStatus = async ({ id, is_active }) => {
-  const sql = `
+	const sql = `
     UPDATE users
     SET is_active = $2
     WHERE id = $1
     RETURNING id
   `;
 
-  const result = await query(sql, [id, is_active]);
-  return result.rows[0] || null;
+	const result = await query(sql, [id, is_active]);
+	return result.rows[0] || null;
 };
 
 const listUsers = async ({ limit, offset }) => {
-  const sql = `
+	const sql = `
     SELECT ${USER_SELECT_FIELDS}
     FROM users u
     INNER JOIN roles r ON r.id = u.role_id
@@ -149,25 +155,25 @@ const listUsers = async ({ limit, offset }) => {
     LIMIT $1 OFFSET $2
   `;
 
-  const result = await query(sql, [limit, offset]);
-  return result.rows;
+	const result = await query(sql, [limit, offset]);
+	return result.rows;
 };
 
 const countUsers = async () => {
-  const sql = `SELECT COUNT(*)::int AS total FROM users`;
-  const result = await query(sql);
-  return result.rows[0].total;
+	const sql = `SELECT COUNT(*)::int AS total FROM users`;
+	const result = await query(sql);
+	return result.rows[0].total;
 };
 
 module.exports = {
-  findRoleByName,
-  findUserById,
-  findUserWithPasswordByUsername,
-  findUserByUsername,
-  findUserByEmail,
-  createUser,
-  updateUser,
-  updateUserStatus,
-  listUsers,
-  countUsers,
+	findRoleByName,
+	findUserById,
+	findUserWithPasswordByUsername,
+	findUserByUsername,
+	findUserByEmail,
+	createUser,
+	updateUser,
+	updateUserStatus,
+	listUsers,
+	countUsers,
 };

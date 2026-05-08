@@ -12,46 +12,46 @@ const SALE_ITEM_SELECT_FIELDS = `
 `;
 
 const listSaleItemsBySaleId = async (client, sale_id) => {
-  const sql = `
+	const sql = `
     SELECT ${SALE_ITEM_SELECT_FIELDS}
     FROM sale_items si
     WHERE si.sale_id = $1
     ORDER BY si.created_at ASC
   `;
 
-  const result = await client.query(sql, [sale_id]);
-  return result.rows;
+	const result = await client.query(sql, [sale_id]);
+	return result.rows;
 };
 
 const listSaleItemsBySaleIds = async (client, saleIds = []) => {
-  if (!saleIds.length) {
-    return [];
-  }
+	if (!saleIds.length) {
+		return [];
+	}
 
-  const sql = `
+	const sql = `
     SELECT ${SALE_ITEM_SELECT_FIELDS}
     FROM sale_items si
     WHERE si.sale_id = ANY($1::uuid[])
     ORDER BY si.sale_id ASC, si.created_at ASC
   `;
 
-  const result = await client.query(sql, [saleIds]);
-  return result.rows;
+	const result = await client.query(sql, [saleIds]);
+	return result.rows;
 };
 
 const createSaleItem = async (
-  client,
-  {
-    sale_id,
-    product_id,
-    product_name,
-    product_category_name,
-    quantity,
-    unit_price,
-    line_total,
-  }
+	client,
+	{
+		sale_id,
+		product_id,
+		product_name,
+		product_category_name,
+		quantity,
+		unit_price,
+		line_total,
+	},
 ) => {
-  const sql = `
+	const sql = `
     INSERT INTO sale_items (
       sale_id,
       product_id,
@@ -65,21 +65,21 @@ const createSaleItem = async (
     RETURNING id
   `;
 
-  const result = await client.query(sql, [
-    sale_id,
-    product_id,
-    product_name,
-    product_category_name,
-    quantity,
-    unit_price,
-    line_total,
-  ]);
+	const result = await client.query(sql, [
+		sale_id,
+		product_id,
+		product_name,
+		product_category_name,
+		quantity,
+		unit_price,
+		line_total,
+	]);
 
-  return result.rows[0];
+	return result.rows[0];
 };
 
 module.exports = {
-  listSaleItemsBySaleId,
-  listSaleItemsBySaleIds,
-  createSaleItem,
+	listSaleItemsBySaleId,
+	listSaleItemsBySaleIds,
+	createSaleItem,
 };
